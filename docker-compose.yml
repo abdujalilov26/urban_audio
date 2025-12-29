@@ -1,12 +1,11 @@
 version: "3.9"
 
-
 services:
   speech_api:
     build: .
     ports:
       - "8000:8000"
-    restart: unless-stopp
+    restart: unless-stopped
     environment:
       UVICORN_WORKERS: 2
     healthcheck:
@@ -14,3 +13,14 @@ services:
       interval: 30s
       timeout: 5s
       retries: 5
+
+
+  nginx:
+    build: ./nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - .:/app
+    depends_on:
+      - speech_api
